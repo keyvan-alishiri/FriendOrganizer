@@ -16,7 +16,7 @@ namespace FriendOrganizer.UI.Data
         {
             _contextCreator = contextCreator;
         }
-        public async  Task<List<Friend>> GetAllAsync()
+        public async  Task<Friend> GetByIdAsync(int id)
         {
             using (var ctx = _contextCreator())
             {
@@ -24,7 +24,7 @@ namespace FriendOrganizer.UI.Data
                 //await Task.Delay(5000);
 
                 //return friends;
-                 return await ctx.Friends.AsNoTracking().ToListAsync();
+                return await ctx.Friends.AsNoTracking().SingleOrDefaultAsync(f => f.Id == id);
             }
         }
     }
