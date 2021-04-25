@@ -7,12 +7,16 @@ namespace FriendOrganizer.Model
     {
         
         public int Id { get; set; }
-        [Required]
+
+        [Display(Name ="نام")]
+        [Required(ErrorMessage ="مقدار {0} نمی تواند خالی باشد")]
         [StringLength(50)]
         public string FirstName { get; set; }
         [StringLength(50)]
         public string LastName { get; set; }
+
         [StringLength(50)]
+        [EmailAddress]
         public string Email { get; set; }
 
     }
