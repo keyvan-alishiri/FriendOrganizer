@@ -24,6 +24,11 @@ namespace FriendOrganizer.UI.Data.Repositories
 
 	  }
 
+	  public bool HasChanges()
+	  {
+		 return _context.ChangeTracker.HasChanges();
+	  }
+
 	  public async Task SaveAsync()
 	  {
 
