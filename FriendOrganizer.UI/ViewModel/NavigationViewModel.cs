@@ -23,7 +23,8 @@ namespace FriendOrganizer.UI.ViewModel
             _eventAggregator = eventAggregator;
             Friends = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterFriendSaveEvent>().Subscribe(AfterFriendSave);
-        }
+          
+      }
 
         private void AfterFriendSave(AfterFriendSaveEventArgs obj)
         {
