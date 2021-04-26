@@ -1,11 +1,8 @@
-﻿using FriendOrganizer.Model;
-using FriendOrganizer.UI.Data;
-using FriendOrganizer.UI.Event;
+﻿using FriendOrganizer.UI.Event;
+using FriendOrganizer.UI.View.Services;
 using Prism.Events;
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace FriendOrganizer.UI.ViewModel
 {
@@ -16,6 +13,7 @@ namespace FriendOrganizer.UI.ViewModel
 	  public INavigationViewModel NavigationViewModel { get; }
 
 	  private Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
+	  private IMessageDialogService _messageDialogService;
 	  private IEventAggregator _eventAggregator;
 
 	  private IFriendDetailViewModel _friendDetailViewModel;
@@ -30,8 +28,10 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  public MainViewModel(INavigationViewModel navigationViewModel,
 		Func<IFriendDetailViewModel> friendDetailViewModelCreator,
-		 IEventAggregator eventAggregator)
+		 IEventAggregator eventAggregator,
+		 IMessageDialogService messageDialogService )
 	  {
+		 _messageDialogService = messageDialogService;
 		 _eventAggregator = eventAggregator;
 		 NavigationViewModel = navigationViewModel;
 		 _friendDetailViewModelCreator = friendDetailViewModelCreator;
@@ -53,8 +53,8 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 if(FriendDetailViewModel !=null && FriendDetailViewModel.HasChanges)
 		 {
-			var result = MessageBox.Show("شما تغییرات را ذخیره نکرده اید ", "Question", MessageBoxButton.OKCancel);
-			if(result == MessageBoxResult.Cancel)
+			var result = _messageDialogService.ShowOkCancelDialg("شما تغییرات را ذخیره نکرده اید ", "Question");
+			if(result == MessageDialogResult.Cancel)
 			{
 			   return;
 			}
