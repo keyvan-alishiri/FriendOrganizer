@@ -1,9 +1,11 @@
-﻿using FriendOrganizer.UI.Data;
+﻿using FriendOrganizer.Model;
+using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Data.Repositories;
 using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.Wrapper;
 using Prism.Commands;
 using Prism.Events;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -23,9 +25,11 @@ namespace FriendOrganizer.UI.ViewModel
 		 SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
 	  }
 
-	  public async Task LoadAsync(int friendId)
+	  public async Task LoadAsync(int? friendId)
 	  {
-		 var friend = await _friendRepository.GetByIdAsync(friendId);
+		 var friend = friendId.HasValue
+			? await _friendRepository.GetByIdAsync(friendId.Value)
+			: CreateNewFriend();
 		 Friend = new FriendWrapper(friend);
 		 Friend.PropertyChanged += (s, e) =>
 		 {
@@ -44,6 +48,13 @@ namespace FriendOrganizer.UI.ViewModel
 
 
 
+	  }
+
+	  private Friend CreateNewFriend()
+	  {
+		 var friend = new Friend();
+		 _friendRepository.Add(friend);
+		 return friend;
 	  }
 
 	  public FriendWrapper Friend
