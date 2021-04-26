@@ -10,30 +10,47 @@ using System.Windows.Media;
 
 namespace FriendOrganizer.UI.Data.Lookups
 {
-    public class LookupDataService : IFriendLookupDataService
-    {
-        private Func<FriendOrganizerDbContext> _contextCreator;
+   public class LookupDataService : IFriendLookupDataService, IProgrammingLanguageLookupDataService
+   {
+	  private Func<FriendOrganizerDbContext> _contextCreator;
 
-        public LookupDataService(Func<FriendOrganizerDbContext> contextCreator)
-        {
-            _contextCreator = contextCreator;
-        }
+	  public LookupDataService(Func<FriendOrganizerDbContext> contextCreator)
+	  {
+		 _contextCreator = contextCreator;
+	  }
 
-        public async Task<IEnumerable<LookupItem>> GetFriendLookupAsync()
-        {
-            using (var ctx = _contextCreator())
+	  public async Task<IEnumerable<LookupItem>> GetFriendLookupAsync()
+	  {
+		 using (var ctx = _contextCreator())
 
-            {
-                return await ctx.Friends.AsNoTracking()
-                      .Select(f =>
-                      new LookupItem
-                      {
-                          Id = f.Id,
-                          DisplayMember = f.FirstName + " " + f.LastName
-                      })
-                      .ToListAsync();
+		 {
+			return await ctx.Friends.AsNoTracking()
+				  .Select(f =>
+				  new LookupItem
+				  {
+					 Id = f.Id,
+					 DisplayMember = f.FirstName + " " + f.LastName
+				  })
+				  .ToListAsync();
 
-            }
-        }
-    }
+		 }
+	  }
+
+	  public async Task<IEnumerable<LookupItem>> GetProgrammingLanguageAsync()
+	  {
+		 using (var ctx = _contextCreator())
+
+		 {
+			return await ctx.ProgrammingLanguages.AsNoTracking()
+				  .Select(f =>
+				  new LookupItem
+				  {
+					 Id = f.Id,
+					 DisplayMember = f.Name
+				  })
+				  .ToListAsync();
+
+		 }
+	  }
+   }
 }

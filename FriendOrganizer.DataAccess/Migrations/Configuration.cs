@@ -22,11 +22,19 @@
               new Friend { FirstName = "Thomas", LastName = "Huber" }
              );
 
+         context.ProgrammingLanguages.AddOrUpdate(pl=> pl.Name,
+                new ProgrammingLanguage { Name = "C#" },
+            new ProgrammingLanguage { Name = "TypeScript" },
+             new ProgrammingLanguage { Name = "F#" },
+              new ProgrammingLanguage { Name = "Java" },
+               new ProgrammingLanguage { Name = "Swift" }
+             );
 
-            //  This method will be called after migrating to the latest version.
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method
-            //  to avoid creating duplicate seed data.
-        }
+         //  This method will be called after migrating to the latest version.
+
+         //  You can use the DbSet<T>.AddOrUpdate() helper extension method
+         //  to avoid creating duplicate seed data.
+      }
     }
 }
