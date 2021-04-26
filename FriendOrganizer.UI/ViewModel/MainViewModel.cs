@@ -40,9 +40,16 @@ namespace FriendOrganizer.UI.ViewModel
 
 		 _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
 			   .Subscribe(onOpenFriendDetailView);
+		 _eventAggregator.GetEvent<AfterFriendDeleteEvent>()
+			.Subscribe(AfterFriendDeleted);
 		 CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
 
 
+	  }
+
+	  private void AfterFriendDeleted(int friendId)
+	  {
+		 FriendDetailViewModel = null;
 	  }
 
 	  private void OnCreateNewFriendExecute()
@@ -61,7 +68,7 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 if(FriendDetailViewModel !=null && FriendDetailViewModel.HasChanges)
 		 {
-			var result = _messageDialogService.ShowOkCancelDialg("شما تغییرات را ذخیره نکرده اید ", "Question");
+			var result = _messageDialogService.ShowOkCancelDialog("شما تغییرات را ذخیره نکرده اید ", "Question");
 			if(result == MessageDialogResult.Cancel)
 			{
 			   return;

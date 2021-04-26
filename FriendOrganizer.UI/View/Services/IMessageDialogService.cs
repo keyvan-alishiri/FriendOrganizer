@@ -2,6 +2,6 @@
 {
    public interface IMessageDialogService
    {
-	  MessageDialogResult ShowOkCancelDialg(string text, string title);
+	  MessageDialogResult ShowOkCancelDialog(string text, string title);
    }
 }
