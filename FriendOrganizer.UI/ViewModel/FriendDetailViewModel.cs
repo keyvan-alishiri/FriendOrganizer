@@ -201,12 +201,13 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 await _friendRepository.SaveAsync();
 		 HasChanges = _friendRepository.HasChanges();
-		 _eventAggregator.GetEvent<AfterFriendSaveEvent>().Publish(
-			 new AfterFriendSaveEventArgs
+		 _eventAggregator.GetEvent<AfterDetailSaveEvent>().Publish(
+			 new AfterDetailSaveEventArgs
 			 {
 				Id = Friend.Id,
-				DisplayMember = $"{Friend.FirstName} {Friend.LastName}"
-			 });
+				DisplayMember = $"{Friend.FirstName} {Friend.LastName}",
+				ViewModelName = nameof(FriendDetailViewModel)
+			 }) ;
 	  }
 	  private bool OnSaveCanExecute()
 	  {
@@ -227,10 +228,11 @@ namespace FriendOrganizer.UI.ViewModel
 			_friendRepository.Remove(Friend.Model);
 			await _friendRepository.SaveAsync();
 			_eventAggregator.GetEvent<AfterDetailDeletedEvent>().Publish(
-			   new AfterDetailDeletedEventArgs{
+			   new AfterDetailDeletedEventArgs
+			   {
 				  Id = Friend.Id,
 				  ViewModelName = nameof(FriendDetailViewModel)
-				 );
+			   });
 		 }
 		
 	  }
