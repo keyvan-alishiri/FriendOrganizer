@@ -25,7 +25,8 @@
         </Grid.ColumnDefinitions>
 	  <Menu Grid.ColumnSpan="2" FontSize="20" FlowDirection="RightToLeft"  >
 		 <MenuItem Header="Create" >
-			<MenuItem Header="News Friend" Command="{Binding CreateNewFriendCommand}"/>
+			<MenuItem Header="News Friend" Command="{Binding CreateNewDetailCommand}"
+					  CommandParameter="{x:Type ViewModel:FriendDetailViewModel}"/>
 		 </MenuItem>
 	  </Menu>
         
