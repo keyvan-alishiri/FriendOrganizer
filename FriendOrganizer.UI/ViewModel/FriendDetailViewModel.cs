@@ -56,7 +56,11 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  private void OnAddPhoneNumberExecute()
 	  {
-		 //TODO
+		 var newNumber = new FriendPhoneNumberWrapper(new FriendPhoneNumber());
+		 newNumber.PropertyChanged += FriendPhoneNumberWrapper_PropertyChanged;
+		 PhoneNumbers.Add(newNumber);
+		 Friend.Model.PhoneNumbers.Add(newNumber.Model);
+		 newNumber.Number = ""; //Triger validation 
 	  }
 
 	  public async Task LoadAsync(int? friendId)
