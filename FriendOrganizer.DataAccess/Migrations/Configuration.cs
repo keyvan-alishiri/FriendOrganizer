@@ -30,7 +30,10 @@
                new ProgrammingLanguage { Name = "Swift" }
              );
 
-
+         context.SaveChanges();
+         context.FriendPhoneNumbers.AddOrUpdate(pn => pn.Number,
+          new FriendPhoneNumber { Number = "+98 12345678", FriendId = context.Friends.First().Id });
+       
          //  This method will be called after migrating to the latest version.
 
          //  You can use the DbSet<T>.AddOrUpdate() helper extension method

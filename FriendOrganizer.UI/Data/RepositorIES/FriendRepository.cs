@@ -23,10 +23,12 @@ namespace FriendOrganizer.UI.Data.Repositories
 		 _context.Friends.Add(friend);
 	  }
 
-	  public async Task<Friend> GetByIdAsync(int id)
+	  public async Task<Friend> GetByIdAsync(int friendId)
 	  {
 
-		 return await _context.Friends.SingleOrDefaultAsync(f => f.Id == id);
+		 return await _context.Friends
+			.Include(f=>f.PhoneNumbers)
+			.SingleOrDefaultAsync(f => f.Id == friendId);
 
 	  }
 
