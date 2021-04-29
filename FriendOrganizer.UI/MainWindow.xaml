@@ -31,6 +31,6 @@
         
         
 	  <view:NavigationView Grid.Row="1"  Grid.Column="1"  DataContext="{Binding NavigationViewModel}"/>
-	  <ContentControl  Grid.Row="1" Grid.Column="0" Content="{Binding FriendDetailViewModel}"/>
+	  <ContentControl  Grid.Row="1" Grid.Column="0" Content="{Binding DetailViewModel}"/>
    </Grid>
 </Window>

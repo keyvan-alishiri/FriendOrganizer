@@ -18,12 +18,12 @@ namespace FriendOrganizer.UI.ViewModel
 	  private IMessageDialogService _messageDialogService;
 	  private IEventAggregator _eventAggregator;
 
-	  private IFriendDetailViewModel _friendDetailViewModel;
+	  private IDetailViewModel _detailViewModel;
 
-	  public IFriendDetailViewModel FriendDetailViewModel
+	  public IDetailViewModel DetailViewModel
 	  {
-		 get { return _friendDetailViewModel; }
-		 private  set { _friendDetailViewModel = value;
+		 get { return _detailViewModel; }
+		 private  set { _detailViewModel = value;
 			OnPropertyChanged();
 		 }
 	  }
@@ -49,7 +49,7 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  private void AfterFriendDeleted(int friendId)
 	  {
-		 FriendDetailViewModel = null;
+		 DetailViewModel = null;
 	  }
 
 	  private void OnCreateNewFriendExecute()
@@ -66,7 +66,7 @@ namespace FriendOrganizer.UI.ViewModel
 	   public ICommand CreateNewFriendCommand { get; }
 	  private async void onOpenFriendDetailView(int? friendId)
 	  {
-		 if(FriendDetailViewModel !=null && FriendDetailViewModel.HasChanges)
+		 if(DetailViewModel !=null && DetailViewModel.HasChanges)
 		 {
 			var result = _messageDialogService.ShowOkCancelDialog("شما تغییرات را ذخیره نکرده اید ", "Question");
 			if(result == MessageDialogResult.Cancel)
@@ -74,8 +74,8 @@ namespace FriendOrganizer.UI.ViewModel
 			   return;
 			}
 		 }
-		 FriendDetailViewModel = _friendDetailViewModelCreator();
-		 await FriendDetailViewModel.LoadAsync(friendId);
+		 DetailViewModel = _friendDetailViewModelCreator();
+		 await DetailViewModel.LoadAsync(friendId);
 	  }
 
 
