@@ -52,6 +52,8 @@
 				   AutoGenerateColumns="False" RowHeaderWidth="0">
 			<DataGrid.Columns>
 			   <DataGridTextColumn Header="شماره تماس" Width="*" 
+								   ElementStyle="{StaticResource DateGridColumnStyle}"
+								   EditingElementStyle="{StaticResource DataGridEditingColumnStyle}"
 								   Binding="{Binding Number,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 			</DataGrid.Columns>
 		 </DataGrid>
