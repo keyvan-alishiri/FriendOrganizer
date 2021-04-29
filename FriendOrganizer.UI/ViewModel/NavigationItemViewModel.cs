@@ -28,21 +28,30 @@ namespace FriendOrganizer.UI.ViewModel
             }
         }
 
-        public NavigationItemViewModel(int id,string displayMember , IEventAggregator eventAggregator)
+	  private string _detailViewModelName;
+
+	  public NavigationItemViewModel(int id,string displayMember,string detailViewModelName , IEventAggregator eventAggregator)
         {
 
          _eventAggregator = eventAggregator;
             Id = id;
-            DisplayMember = displayMember; 
-         OpenFriendDetailViewCommand = new DelegateCommand(OnOpenFriendDetailView);
+            DisplayMember = displayMember;
+         _detailViewModelName = detailViewModelName;
+         OpenDetailViewCommand = new DelegateCommand(OnOpenDetailViewExecute);
         }
 
-	  private void OnOpenFriendDetailView()
+	  private void OnOpenDetailViewExecute()
 	  {
-         _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
-                     .Publish(Id);
+         _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                     .Publish(
+            new OpenDetailViewEventArgs
+            {
+               Id = Id,
+               ViewModelName = _detailViewModelName
+            }
+           ) ;
       }
 
-      public ICommand OpenFriendDetailViewCommand { get; }
+      public ICommand OpenDetailViewCommand { get; }
     }
 }

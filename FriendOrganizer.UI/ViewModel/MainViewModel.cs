@@ -38,8 +38,8 @@ namespace FriendOrganizer.UI.ViewModel
 		 NavigationViewModel = navigationViewModel;
 		 _friendDetailViewModelCreator = friendDetailViewModelCreator;
 
-		 _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
-			   .Subscribe(onOpenFriendDetailView);
+		 _eventAggregator.GetEvent<OpenDetailViewEvent>()
+			   .Subscribe(onOpenDetailView);
 		 _eventAggregator.GetEvent<AfterFriendDeleteEvent>()
 			.Subscribe(AfterFriendDeleted);
 		 CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
@@ -54,7 +54,7 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  private void OnCreateNewFriendExecute()
 	  {
-		 onOpenFriendDetailView(null);
+		 onOpenDetailView(null);
 	  }
 
 	  public async Task LoadAsync()
@@ -64,7 +64,7 @@ namespace FriendOrganizer.UI.ViewModel
 	  }
 
 	   public ICommand CreateNewFriendCommand { get; }
-	  private async void onOpenFriendDetailView(int? friendId)
+	  private async void onOpenDetailView(OpenDetailViewEventArgs args)
 	  {
 		 if(DetailViewModel !=null && DetailViewModel.HasChanges)
 		 {
@@ -74,8 +74,16 @@ namespace FriendOrganizer.UI.ViewModel
 			   return;
 			}
 		 }
-		 DetailViewModel = _friendDetailViewModelCreator();
-		 await DetailViewModel.LoadAsync(friendId);
+		 
+		 switch (args.ViewModelName)
+		 {
+			case nameof(FriendDetailViewModel):
+			   DetailViewModel = _friendDetailViewModelCreator();
+			   break;
+		 }
+
+		 
+		 await DetailViewModel.LoadAsync(args.Id);
 	  }
 
 
