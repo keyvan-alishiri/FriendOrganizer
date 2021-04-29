@@ -43,6 +43,11 @@ namespace FriendOrganizer.UI.Data.Repositories
 		 
 	  }
 
+	  public void RemovePhoneNumber(FriendPhoneNumber model)
+	  {
+		 _context.FriendPhoneNumbers.Remove(model);
+	  }
+
 	  public async Task SaveAsync()
 	  {
 
