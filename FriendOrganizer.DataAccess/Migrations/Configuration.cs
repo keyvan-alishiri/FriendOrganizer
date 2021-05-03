@@ -2,7 +2,8 @@
 {
     using FriendOrganizer.Model;
     using System;
-    using System.Data.Entity;
+   using System.Collections.Generic;
+   using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
@@ -33,6 +34,31 @@
          context.SaveChanges();
          context.FriendPhoneNumbers.AddOrUpdate(pn => pn.Number,
           new FriendPhoneNumber { Number = "+98 12345678", FriendId = context.Friends.First().Id });
+
+         context.Meetings.AddOrUpdate(m => m.Title,
+
+            new Meeting
+            {
+               Title = "Watvhing Soccer",
+               DateFrom = new DateTime(2020, 5, 26),
+               DateTo = new DateTime(2020, 5, 26),
+               Friends = new List<Friend>()
+               {
+                  context.Friends.Single(f=>f.FirstName == "Sara" && f.LastName == "Shafie"),
+                  context.Friends.Single(f=>f.FirstName == "peyman" && f.LastName == "Meier"),
+               }
+
+
+            });
+        
+
+
+
+
+
+
+
+
        
          //  This method will be called after migrating to the latest version.
 
