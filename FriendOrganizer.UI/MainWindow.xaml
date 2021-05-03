@@ -22,19 +22,19 @@
 		 <RowDefinition/>
 	  </Grid.RowDefinitions>
         <Grid.ColumnDefinitions >
-            <ColumnDefinition/>
-            <ColumnDefinition Width="200"/>
+		 <ColumnDefinition Width="200"/>
+            <ColumnDefinition />
 
         </Grid.ColumnDefinitions>
-	  <Menu Grid.ColumnSpan="2" FontSize="20" FlowDirection="RightToLeft"  >
+	  <Menu Grid.ColumnSpan="2" FontSize="20" >
 		 <MenuItem Header="Create" >
 			<MenuItem Header="News Friend" Command="{Binding CreateNewDetailCommand}"
 					  CommandParameter="{x:Type ViewModel:FriendDetailViewModel}"/>
 		 </MenuItem>
 	  </Menu>
-        
-        
-	  <view:NavigationView Grid.Row="1"  Grid.Column="1"  DataContext="{Binding NavigationViewModel}"/>
-	  <ContentControl  Grid.Row="1" Grid.Column="0" Content="{Binding DetailViewModel}"/>
+
+	  <ContentControl  Grid.Row="1" Grid.Column="1" Content="{Binding DetailViewModel}"/>
+	  <view:NavigationView Grid.Row="1"  Grid.Column="0"  DataContext="{Binding NavigationViewModel}"/>
+	 
    </Grid>
 </Window>
