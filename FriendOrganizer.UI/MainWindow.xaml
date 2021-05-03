@@ -30,6 +30,9 @@
 		 <MenuItem Header="Create" >
 			<MenuItem Header="News Friend" Command="{Binding CreateNewDetailCommand}"
 					  CommandParameter="{x:Type ViewModel:FriendDetailViewModel}"/>
+			<MenuItem Header="News Meeting" Command="{Binding CreateNewDetailCommand}"
+					  CommandParameter="{x:Type ViewModel:MeetingDetailViewModel}"/>
+			
 		 </MenuItem>
 	  </Menu>
 

@@ -13,8 +13,10 @@ namespace FriendOrganizer.Model
 	  }
 
 	  public int Id { get; set; }
-	  [Required]
+	
 	  [StringLength(50)]
+	  [Display(Name = "عنوان")]
+	  [Required(ErrorMessage = "مقدار {0} نمی تواند خالی باشد")]
 	  public string Title { get; set; }
 	  public DateTime DateFrom { get; set; }
 	  public DateTime DateTo { get; set; }
