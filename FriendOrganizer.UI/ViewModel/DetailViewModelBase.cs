@@ -4,6 +4,7 @@ using Prism.Events;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FriendOrganizer.UI.Event;
+using System;
 
 namespace FriendOrganizer.UI.ViewModel
 {
@@ -17,8 +18,7 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  public ICommand SaveCommand { get; private set; }
 	  public ICommand DeleteCommand { get; private set; }
-
-	 
+	  public ICommand CloseDetailViewCommand { get; }
 
 	  public int Id
 	  {
@@ -44,6 +44,12 @@ namespace FriendOrganizer.UI.ViewModel
 		 EventAggregator = eventAggregator;
 		 SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
 		 DeleteCommand = new DelegateCommand(OnDeleteExecute);
+		 CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
+	  }
+
+	  protected virtual void OnCloseDetailViewExecute()
+	  {
+		//TODO:Close this instance
 	  }
 
 	  protected abstract void OnDeleteExecute();
