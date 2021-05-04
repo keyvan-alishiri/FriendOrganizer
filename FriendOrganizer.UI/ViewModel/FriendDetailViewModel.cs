@@ -205,6 +205,11 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  protected override async void OnDeleteExecute()
 	  {
+		 if(await _friendRepository.HasMeetingsAsync(Friend.Id))
+		 {
+			_messageDialogService.ShowOkCancelDialog($" نمی توانید این ملاقات را حذف کنید چرا که {Friend.FirstName} {Friend.LastName}در لیست ملاقات ها قرار دارد", "اخطار حذف");
+			return;
+		 }
 		 var result = _messageDialogService.ShowOkCancelDialog($"آیا می خواهید  اطلاعات {Friend.FirstName} {Friend.LastName} را حذف کنید؟","اخطار حذف");
 		 if(result == MessageDialogResult.Ok)
 		 {
