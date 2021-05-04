@@ -23,7 +23,9 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 get { return _id; }
 		protected set { _id = value; }
+
 	  }
+
 
 	  public DetailViewModelBase(IEventAggregator eventAggregator)
 	  {
