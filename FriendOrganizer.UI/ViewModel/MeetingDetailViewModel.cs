@@ -89,7 +89,7 @@ namespace FriendOrganizer.UI.ViewModel
 		 var meeting = meetingId.HasValue
 			? await _meetingRepository.GetByIdAsync(meetingId.Value)
 			: CreateNewsMeeting();
-
+		 Id = meeting.Id;
 		 InitializeMeeting(meeting);
 
 		 // TODO : Load the friends for the picklist
@@ -140,7 +140,7 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 await _meetingRepository.SaveAsync();
 		 HasChanges = _meetingRepository.HasChanges();
-		
+		 Id = Meeting.Id;
 		 RaiseDetailSavedEvent(Meeting.Id, Meeting.Title);
 	  }
 

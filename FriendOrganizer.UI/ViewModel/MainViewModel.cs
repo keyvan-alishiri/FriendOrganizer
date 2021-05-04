@@ -4,6 +4,8 @@ using FriendOrganizer.UI.View.Services;
 using Prism.Commands;
 using Prism.Events;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -14,19 +16,18 @@ namespace FriendOrganizer.UI.ViewModel
 
 
 	  public INavigationViewModel NavigationViewModel { get; }
+	  public ObservableCollection<IDetailViewModel> DetailViewModels { get; set; }
 
 	  private IIndex<string, IDetailViewModel> _detailViewModelCreator;
-	  
-	 
-	  private IMessageDialogService _messageDialogService;
+      private IMessageDialogService _messageDialogService;
 	  private IEventAggregator _eventAggregator;
+	  public ICommand CreateNewDetailCommand { get; }
+	  private IDetailViewModel _selectedDetailViewModel;
 
-	  private IDetailViewModel _detailViewModel;
-
-	  public IDetailViewModel DetailViewModel
+	  public IDetailViewModel SelectedDetailViewModel
 	  {
-		 get { return _detailViewModel; }
-		 private  set { _detailViewModel = value;
+		 get { return _selectedDetailViewModel; }
+		 set { _selectedDetailViewModel = value;
 			OnPropertyChanged();
 		 }
 	  }
@@ -40,7 +41,8 @@ namespace FriendOrganizer.UI.ViewModel
 		 _eventAggregator = eventAggregator;
 		 NavigationViewModel = navigationViewModel;
 		 _detailViewModelCreator = detailViewModelCreator;
-		
+		 DetailViewModels = new ObservableCollection<IDetailViewModel>();
+
 
 		 _eventAggregator.GetEvent<OpenDetailViewEvent>()
 			   .Subscribe(onOpenDetailView);
@@ -53,7 +55,26 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
 	  {
-		 DetailViewModel = null;
+		 var detailViewModel = DetailViewModels.SingleOrDefault(vm => vm.Id == args.Id && vm.GetType().Name == args.ViewModelName);.
+		 if(detailViewModel != null)
+		 {
+			DetailViewModels.Remove(detailViewModel);
+		 }
+		
+	  }
+
+	  private async void OnOpenDetailView(OpenDetailViewEventArgs args)
+	  {
+		var detailViewModel = DetailViewModels.SingleOrDefault(vm => vm.Id == args.Id && vm.GetType().Name == args.ViewModelName);
+		 if(detailViewModel == null)
+		 {
+			detailViewModel = _detailViewModelCreator[args.ViewModelName];
+			await SelectedDetailViewModel.LoadAsync(args.Id);
+			DetailViewModels.Add(detailViewModel);
+		 }
+
+		 SelectedDetailViewModel = detailViewModel;
+		 
 	  }
 
 	  private void OnCreateNewDetailExecute(Type viewModelType)
@@ -67,10 +88,10 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  }
 
-	   public ICommand CreateNewDetailCommand { get; }
+	
 	  private async void onOpenDetailView(OpenDetailViewEventArgs args)
 	  {
-		 if(DetailViewModel !=null && DetailViewModel.HasChanges)
+		 if(SelectedDetailViewModel !=null && SelectedDetailViewModel.HasChanges)
 		 {
 			var result = _messageDialogService.ShowOkCancelDialog("شما تغییرات را ذخیره نکرده اید ", "Question");
 			if(result == MessageDialogResult.Cancel)
@@ -78,9 +99,9 @@ namespace FriendOrganizer.UI.ViewModel
 			   return;
 			}
 		 }
-		 DetailViewModel = _detailViewModelCreator[args.ViewModelName];
+		 SelectedDetailViewModel = _detailViewModelCreator[args.ViewModelName];
 
-		 await DetailViewModel.LoadAsync(args.Id);
+		 await SelectedDetailViewModel.LoadAsync(args.Id);
 		
 		 
 		 

@@ -20,7 +20,7 @@ namespace FriendOrganizer.UI.ViewModel
    public class FriendDetailViewModel : DetailViewModelBase, IFriendDetailViewModel
    {
 	  private IFriendRepository _friendRepository;
-	  private IEventAggregator _eventAggregator;
+	
 	  private IMessageDialogService _messageDialogService;
 	  private IProgrammingLanguageLookupDataService _programmingLanguageLookupDataService;
 	  private FriendWrapper _friend;
@@ -73,6 +73,7 @@ namespace FriendOrganizer.UI.ViewModel
 		 var friend = friendId.HasValue
 			? await _friendRepository.GetByIdAsync(friendId.Value)
 			: CreateNewFriend();
+		 Id = friend.Id;
 
 		 InitializeFriend(friend);
 		 InitializeFriendPhoneNumbers(friend.PhoneNumbers);
@@ -188,6 +189,7 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 await _friendRepository.SaveAsync();
 		 HasChanges = _friendRepository.HasChanges();
+		 Id = Friend.Id;
 
 		 RaiseDetailSavedEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
 		 
