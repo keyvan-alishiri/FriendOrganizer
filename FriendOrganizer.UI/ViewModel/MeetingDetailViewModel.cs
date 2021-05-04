@@ -165,9 +165,15 @@ namespace FriendOrganizer.UI.ViewModel
 			{
 			   HasChanges = _meetingRepository.HasChanges();
 			}
+
 			if (e.PropertyName == nameof(Meeting.HasErrors))
 			{
 			   ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+			}
+
+			if (e.PropertyName == nameof(Meeting.Title))
+			{
+			   SetTitle();
 			}
 		 };
 
@@ -178,6 +184,13 @@ namespace FriendOrganizer.UI.ViewModel
 			//Little trick to trigger the validation
 			Meeting.Title = "";
 		 }
+
+		 SetTitle();
+	  }
+
+	  private void SetTitle()
+	  {
+		 Title = Meeting.Title;
 	  }
 
 	  private void OnRemoveFriendExecute()

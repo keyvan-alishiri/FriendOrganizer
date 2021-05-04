@@ -13,6 +13,7 @@ namespace FriendOrganizer.UI.ViewModel
 	  private bool _hasChanges;
 	  protected readonly IEventAggregator EventAggregator;
 	  private int _id;
+	  private string _title;
 
 	  public ICommand SaveCommand { get; private set; }
 	  public ICommand DeleteCommand { get; private set; }
@@ -26,6 +27,17 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  }
 
+	 
+
+	  public string Title
+	  {
+		 get { return _title; }
+		protected set
+		 {
+			_title = value;
+			OnPropertyChanged();
+		 }
+	  }
 
 	  public DetailViewModelBase(IEventAggregator eventAggregator)
 	  {
