@@ -18,7 +18,7 @@ namespace FriendOrganizer.UI.ViewModel
    {
 	  private IMeetingRepository _meetingRepository;
 	  private MeetingWrapper _meeting;
-	  private IMessageDialogService _messageDialogService;
+	
 
 	 
 
@@ -28,11 +28,10 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  public MeetingDetailViewModel(IEventAggregator eventAggregator,
 		 IMessageDialogService messageDialogService,
-		 IMeetingRepository meetingRepository) : base(eventAggregator)
+		 IMeetingRepository meetingRepository) : base(eventAggregator, messageDialogService)
 	  {
 		 _meetingRepository = meetingRepository;
-		 _messageDialogService = messageDialogService;
-
+		
 		 AddedFriends = new ObservableCollection<Friend>();
 		 AvailableFriends = new ObservableCollection<Friend>();
 		 AddFriendCommand = new DelegateCommand(OnAddFriendExecute, OnAddFriendCanExecute);
@@ -121,7 +120,7 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  protected async override void OnDeleteExecute()
 	  {
-		 var result = _messageDialogService.ShowOkCancelDialog($"آیا میخواهید اطلاعات قرار ملاقات  {Meeting.Title}را حذف کنید ?", "Question");
+		 var result = MessageDialogService.ShowOkCancelDialog($"آیا میخواهید اطلاعات قرار ملاقات  {Meeting.Title}را حذف کنید ?", "Question");
 		 if (result == MessageDialogResult.Ok)
 		 {
 			_meetingRepository.Remove(Meeting.Model);

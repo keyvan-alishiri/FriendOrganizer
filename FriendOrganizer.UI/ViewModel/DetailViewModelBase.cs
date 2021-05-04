@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using FriendOrganizer.UI.Event;
 using System;
+using FriendOrganizer.UI.View.Services;
 
 namespace FriendOrganizer.UI.ViewModel
 {
    public abstract class DetailViewModelBase : ViewModelBase, IDetailViewModel
    {
+	  protected readonly IMessageDialogService MessageDialogService;
 
 	  private bool _hasChanges;
 	  protected readonly IEventAggregator EventAggregator;
@@ -39,8 +41,9 @@ namespace FriendOrganizer.UI.ViewModel
 		 }
 	  }
 
-	  public DetailViewModelBase(IEventAggregator eventAggregator)
+	  public DetailViewModelBase(IEventAggregator eventAggregator , IMessageDialogService messageDialogService)
 	  {
+		 MessageDialogService = messageDialogService;
 		 EventAggregator = eventAggregator;
 		 SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
 		 DeleteCommand = new DelegateCommand(OnDeleteExecute);
@@ -49,6 +52,13 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  protected virtual void OnCloseDetailViewExecute()
 	  {
+		 if(HasChanges)
+		 {
+			var result = MessageDialogService.ShowOkCancelDialog("شما تغییراتی را انجام داده اید آیا می خواهید بسته شود؟", "هشدار");
+			if(result == MessageDialogResult.Cancel)
+			{ return; }
+		 }
+
 		 EventAggregator.GetEvent<AfterDetailClosedEvent>()
 			 .Publish(new AfterDetailClosedEventArgs
 			 {

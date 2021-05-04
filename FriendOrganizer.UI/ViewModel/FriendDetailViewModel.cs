@@ -21,7 +21,7 @@ namespace FriendOrganizer.UI.ViewModel
    {
 	  private IFriendRepository _friendRepository;
 	
-	  private IMessageDialogService _messageDialogService;
+	 
 	  private IProgrammingLanguageLookupDataService _programmingLanguageLookupDataService;
 	  private FriendWrapper _friend;
 	  private FriendPhoneNumberWrapper _selectedPhoneNumber;
@@ -30,11 +30,11 @@ namespace FriendOrganizer.UI.ViewModel
 		  IEventAggregator eventAggregator,
 		  IMessageDialogService messageDialogService,
 		  IProgrammingLanguageLookupDataService programmingLanguageLookupDataService)
-		 :base(eventAggregator)
+		 :base(eventAggregator,messageDialogService)
 	  {
 		 _friendRepository = friendRepository;
 		
-		 _messageDialogService = messageDialogService;
+	
 		 _programmingLanguageLookupDataService = programmingLanguageLookupDataService; 
 		
 		 AddPhoneNumberCommand = new DelegateCommand(OnAddPhoneNumberExecute);
@@ -220,10 +220,10 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 if(await _friendRepository.HasMeetingsAsync(Friend.Id))
 		 {
-			_messageDialogService.ShowOkCancelDialog($" نمی توانید این ملاقات را حذف کنید چرا که {Friend.FirstName} {Friend.LastName}در لیست ملاقات ها قرار دارد", "اخطار حذف");
+			MessageDialogService.ShowOkCancelDialog($" نمی توانید این ملاقات را حذف کنید چرا که {Friend.FirstName} {Friend.LastName}در لیست ملاقات ها قرار دارد", "اخطار حذف");
 			return;
 		 }
-		 var result = _messageDialogService.ShowOkCancelDialog($"آیا می خواهید  اطلاعات {Friend.FirstName} {Friend.LastName} را حذف کنید؟","اخطار حذف");
+		 var result = MessageDialogService.ShowOkCancelDialog($"آیا می خواهید  اطلاعات {Friend.FirstName} {Friend.LastName} را حذف کنید؟","اخطار حذف");
 		 if(result == MessageDialogResult.Ok)
 		 {
 			_friendRepository.Remove(Friend.Model);
