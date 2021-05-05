@@ -33,11 +33,21 @@ namespace FriendOrganizer.UI.ViewModel
 	  {
 		 _meetingRepository = meetingRepository;
 		 eventAggregator.GetEvent<AfterDetailSaveEvent>().Subscribe(AfterDetailSaved);
+		 eventAggregator.GetEvent<AfterDetailDeletedEvent>().Subscribe(AfterDetailDeleted);
 		 AddedFriends = new ObservableCollection<Friend>();
 		 AvailableFriends = new ObservableCollection<Friend>();
 		 AddFriendCommand = new DelegateCommand(OnAddFriendExecute, OnAddFriendCanExecute);
 		 RemoveFriendCommand = new DelegateCommand(OnRemoveFriendExecute, OnRemoveFriendCanExecute);
 
+	  }
+
+	  private async void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+	  {
+		 if(args.ViewModelName == nameof(FriendDetailViewModel))
+		 {
+			_allFriends = await _meetingRepository.GetAllFriendsAnc();
+			SetupPicklist();
+		 }
 	  }
 
 	  private async  void AfterDetailSaved(AfterDetailSaveEventArgs args)
