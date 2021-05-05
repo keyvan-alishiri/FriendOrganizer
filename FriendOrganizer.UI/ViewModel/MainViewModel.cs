@@ -99,9 +99,11 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  }
 
+
+	  private int nextNewItemId = 0;
 	  private void OnCreateNewDetailExecute(Type viewModelType)
 	  {
-		 OnOpenDetailView(new OpenDetailViewEventArgs { ViewModelName = viewModelType.Name });
+		 OnOpenDetailView(new OpenDetailViewEventArgs { Id = nextNewItemId--, ViewModelName = viewModelType.Name }) ;
 	  }
 
 	  public async Task LoadAsync()
