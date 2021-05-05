@@ -22,6 +22,7 @@ namespace FriendOrganizer.UI.ViewModel
       private IMessageDialogService _messageDialogService;
 	  private IEventAggregator _eventAggregator;
 	  public ICommand CreateNewDetailCommand { get; }
+	  public ICommand OpenSingleDetailViewCommand { get;  }
 	  private IDetailViewModel _selectedDetailViewModel;
 
 	  public IDetailViewModel SelectedDetailViewModel
@@ -53,10 +54,12 @@ namespace FriendOrganizer.UI.ViewModel
 		 _eventAggregator.GetEvent<AfterDetailClosedEvent>()
 			.Subscribe(AfterDetailClosed);
 		 CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
+		 OpenSingleDetailViewCommand = new DelegateCommand<Type>(OnOpenSingleDetailViewExecute);
 
 
 	  }
 
+	
 	  private void AfterDetailClosed(AfterDetailClosedEventArgs args)
 	  {
 		 RemoveDetailViewModel(args.Id, args.ViewModelName);
@@ -104,6 +107,12 @@ namespace FriendOrganizer.UI.ViewModel
 	  private void OnCreateNewDetailExecute(Type viewModelType)
 	  {
 		 OnOpenDetailView(new OpenDetailViewEventArgs { Id = nextNewItemId--, ViewModelName = viewModelType.Name }) ;
+	  }
+
+
+	  private void OnOpenSingleDetailViewExecute(Type viewModelType)
+	  {
+		 OnOpenDetailView(new OpenDetailViewEventArgs { Id = -1, ViewModelName = viewModelType.Name });
 	  }
 
 	  public async Task LoadAsync()
