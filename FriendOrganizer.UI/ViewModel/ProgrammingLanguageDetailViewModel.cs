@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace FriendOrganizer.UI.ViewModel
 {
@@ -19,8 +20,24 @@ namespace FriendOrganizer.UI.ViewModel
    {
 
 	  private IProgrammingLanguageRepository _programmingLanguageRepository;
+	  private ProgrammingLanguageWrapper _selectedProgrammingLanguage;
 
 	  public ObservableCollection<ProgrammingLanguageWrapper> ProgrammingLanguages { get; }
+	  public ICommand RemoveCommand { get; }
+	  public ICommand AddCommand { get; }
+
+	
+
+	  public ProgrammingLanguageWrapper SelectedProgrammingLanguage
+	  {
+		 get { return _selectedProgrammingLanguage; }
+		 set {
+			_selectedProgrammingLanguage = value;
+			OnPropertyChanged();
+			((DelegateCommand)RemoveCommand).RaiseCanExecuteChanged();
+		 }
+	  }
+
 
 	  public ProgrammingLanguageDetailViewModel(IEventAggregator eventAggregator,
       IMessageDialogService messageDialogService,
@@ -30,11 +47,38 @@ namespace FriendOrganizer.UI.ViewModel
 		 _programmingLanguageRepository = programmingLanguageRepository;
 		 Title = "Programming Languages";
 		 ProgrammingLanguages = new ObservableCollection<ProgrammingLanguageWrapper>();
-        
-       
+
+		 AddCommand = new DelegateCommand(OnAddExecute);
+		 RemoveCommand = new DelegateCommand(OnRemoveExecute, OnRemoveCanExecute);
       }
 
+	  private bool OnRemoveCanExecute()
+	  {
+		 return SelectedProgrammingLanguage != null;
+	  }
 
+	  private void OnRemoveExecute()
+	  {
+		 SelectedProgrammingLanguage.PropertyChanged -= Wrapper_PropertyChanged;
+		 _programmingLanguageRepository.Remove(SelectedProgrammingLanguage.Model);
+		 ProgrammingLanguages.Remove(SelectedProgrammingLanguage);
+		 SelectedProgrammingLanguage = null;
+		 HasChanges = _programmingLanguageRepository.HasChanges();
+		 ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+
+	  }
+
+	  private void OnAddExecute()
+	  {
+		 var wrapper = new ProgrammingLanguageWrapper(new ProgrammingLanguage());
+		 wrapper.PropertyChanged += Wrapper_PropertyChanged;
+		 _programmingLanguageRepository.Add(wrapper.Model);
+		 ProgrammingLanguages.Add(wrapper);
+
+		 // Trigger the validation
+		 wrapper.Name = "";
+
+	  }
 
 	  public async override Task LoadAsync(int id)
 	  {
