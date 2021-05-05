@@ -1,5 +1,6 @@
 ﻿using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data.Repositories;
+using FriendOrganizer.UI.Event;
 using FriendOrganizer.UI.View.Services;
 using FriendOrganizer.UI.Wrapper;
 using Prism.Commands;
@@ -31,12 +32,24 @@ namespace FriendOrganizer.UI.ViewModel
 		 IMeetingRepository meetingRepository) : base(eventAggregator, messageDialogService)
 	  {
 		 _meetingRepository = meetingRepository;
-		
+		 eventAggregator.GetEvent<AfterDetailSaveEvent>().Subscribe(AfterDetailSaved);
 		 AddedFriends = new ObservableCollection<Friend>();
 		 AvailableFriends = new ObservableCollection<Friend>();
 		 AddFriendCommand = new DelegateCommand(OnAddFriendExecute, OnAddFriendCanExecute);
 		 RemoveFriendCommand = new DelegateCommand(OnRemoveFriendExecute, OnRemoveFriendCanExecute);
 
+	  }
+
+	  private async  void AfterDetailSaved(AfterDetailSaveEventArgs args)
+	  {
+		 if(args.ViewModelName == nameof(FriendDetailViewModel))
+		 {
+			//TODO: Refresh the friends in the pickuplist
+		   await _meetingRepository.ReloadFriendAsync(args.Id);
+			_allFriends = await _meetingRepository.GetAllFriendsAnc();
+
+			SetupPicklist();
+		 }
 	  }
 
 	  public MeetingWrapper Meeting
