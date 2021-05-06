@@ -57,8 +57,18 @@ namespace FriendOrganizer.UI.ViewModel
 		 return SelectedProgrammingLanguage != null;
 	  }
 
-	  private void OnRemoveExecute()
+	  private async void OnRemoveExecute()
 	  {
+		 var isReferenced =
+			 await _programmingLanguageRepository.IsReferencedByFriendAsync(
+			   SelectedProgrammingLanguage.Id);
+		 if (isReferenced)
+		 {
+			 MessageDialogService.ShowOkCancelDialog($"The language {SelectedProgrammingLanguage.Name}" +
+			  $" can't be removed, as it is referenced by at least one friend","Error");
+			return;
+		 }
+
 		 SelectedProgrammingLanguage.PropertyChanged -= Wrapper_PropertyChanged;
 		 _programmingLanguageRepository.Remove(SelectedProgrammingLanguage.Model);
 		 ProgrammingLanguages.Remove(SelectedProgrammingLanguage);
@@ -127,9 +137,27 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  protected async override void OnSaveExecute()
 	  {
-		 await _programmingLanguageRepository.SaveAsync();
-		 HasChanges = _programmingLanguageRepository.HasChanges();
-		 RaiseCollectionSavedEvent();
+		 try
+		 {
+			await _programmingLanguageRepository.SaveAsync();
+			HasChanges = _programmingLanguageRepository.HasChanges();
+			RaiseCollectionSavedEvent();
+		 }
+		 catch (Exception ex)
+		 {
+
+			while (ex.InnerException != null )
+
+			{
+			   ex = ex.InnerException;
+			}
+		   await	MessageDialogService.ShowInfoDialogAsync("Error while saving the entities, " +
+		  "the data will be reloaded. Details: " + ex.Message);
+			
+			await LoadAsync(Id);
+
+		 }
+
 	  }
    }
 }
