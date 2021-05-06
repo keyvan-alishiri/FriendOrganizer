@@ -20,11 +20,19 @@ namespace FriendOrganizer.UI.View.Services
 		 return result == MessageBoxResult.OK ? MessageDialogResult.Ok : MessageDialogResult.Cancel;
 	  }
 
+      public async Task<MessageDialogResult> ShowOkCancelDialogAsync(string text, string title)
+      {
+         var result =
+           await MetroWindow.ShowMessageAsync(title, text, MessageDialogStyle.AffirmativeAndNegative);
 
-	  public async Task ShowInfoDialogAsync(string text)
-	  {
-		 await MetroWindow.ShowMessageAsync("Info", text);
-	  }
+         return result == MahApps.Metro.Controls.Dialogs.MessageDialogResult.Affirmative
+           ? MessageDialogResult.Ok
+           : MessageDialogResult.Cancel;
+      }
+      public async Task ShowInfoDialogAsync(string text)
+      {
+         await MetroWindow.ShowMessageAsync("Info", text);
+      }
 
    }
 

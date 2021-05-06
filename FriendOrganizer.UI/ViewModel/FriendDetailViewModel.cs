@@ -207,15 +207,19 @@ namespace FriendOrganizer.UI.ViewModel
 	  public ObservableCollection<LookupItem> ProgrammingLanguages { get; }
 	  public ObservableCollection<FriendPhoneNumberWrapper> PhoneNumbers { get; }
 
+
+
 	  protected override async void OnSaveExecute()
 	  {
-		 await _friendRepository.SaveAsync();
-		 HasChanges = _friendRepository.HasChanges();
-		 Id = Friend.Id;
-
-		 RaiseDetailSavedEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
-		 
+		 await SaveWithOptimisticConcurrencyAsync(_friendRepository.SaveAsync,
+		   () =>
+		   {
+			  HasChanges = _friendRepository.HasChanges();
+			  Id = Friend.Id;
+			  RaiseDetailSavedEvent(Friend.Id, $"{Friend.FirstName} {Friend.LastName}");
+		   });
 	  }
+
 	  protected override bool OnSaveCanExecute()
 	  {
 		 //Todo: Check in additation if friend has changes
@@ -229,21 +233,22 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  protected override async void OnDeleteExecute()
 	  {
-		 if(await _friendRepository.HasMeetingsAsync(Friend.Id))
+		 if (await _friendRepository.HasMeetingsAsync(Friend.Id))
 		 {
-			MessageDialogService.ShowOkCancelDialog($" نمی توانید این ملاقات را حذف کنید چرا که {Friend.FirstName} {Friend.LastName}در لیست ملاقات ها قرار دارد", "اخطار حذف");
+			await MessageDialogService.ShowInfoDialogAsync($"{Friend.FirstName} {Friend.LastName} can't be deleted, as this friend is part of at least one meeting");
 			return;
 		 }
-		 var result = MessageDialogService.ShowOkCancelDialog($"آیا می خواهید  اطلاعات {Friend.FirstName} {Friend.LastName} را حذف کنید؟","اخطار حذف");
-		 if(result == MessageDialogResult.Ok)
+
+		 var result = await MessageDialogService.ShowOkCancelDialogAsync($"Do you really want to delete the friend {Friend.FirstName} {Friend.LastName}?",
+		   "Question");
+		 if (result == MessageDialogResult.Ok)
 		 {
 			_friendRepository.Remove(Friend.Model);
 			await _friendRepository.SaveAsync();
 			RaiseDetailDeletedEvent(Friend.Id);
-			
 		 }
-		
 	  }
+
 
 
 

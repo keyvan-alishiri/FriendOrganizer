@@ -16,7 +16,9 @@ namespace FriendOrganizer.Model
 	  } 
         public int Id { get; set; }
 
-        [Display(Name ="نام")]
+     
+
+	  [Display(Name ="نام")]
         [Required(ErrorMessage ="مقدار {0} نمی تواند خالی باشد")]
         [StringLength(50)]
         public string FirstName { get; set; }
@@ -28,8 +30,10 @@ namespace FriendOrganizer.Model
         public string Email { get; set; }
 	  public int? FavoriteLanguageId { get; set; }
 	  public ProgrammingLanguage FavoriteLanguage { get; set; }
+      [Timestamp]
+      public byte[] RowVersion { get; set; }
 
-	  public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
+      public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
       public ICollection<Meeting> Meetings { get; set; }
 
    }
