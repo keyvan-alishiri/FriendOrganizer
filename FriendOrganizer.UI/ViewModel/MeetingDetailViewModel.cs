@@ -143,7 +143,7 @@ namespace FriendOrganizer.UI.ViewModel
 
 	  protected async override void OnDeleteExecute()
 	  {
-		 var result = MessageDialogService.ShowOkCancelDialog($"آیا میخواهید اطلاعات قرار ملاقات  {Meeting.Title}را حذف کنید ?", "Question");
+		 var result =await MessageDialogService.ShowOkCancelDialogAsync($"آیا میخواهید اطلاعات قرار ملاقات  {Meeting.Title}را حذف کنید ?", "Question");
 		 if (result == MessageDialogResult.Ok)
 		 {
 			_meetingRepository.Remove(Meeting.Model);
